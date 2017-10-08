@@ -1,0 +1,1 @@
+#include <softcache/FifoCache.hh>
