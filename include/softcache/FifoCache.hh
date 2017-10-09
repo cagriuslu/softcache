@@ -8,12 +8,12 @@ namespace sc
 {
 	template <typename TKey, typename TValue> class FifoCache : public Container< std::pair<TKey,TValue> >
 	{
-	private:
 		std::unordered_map<TKey,TValue> m_map;
 		CircularQueue<TKey> *m_queue;
 
 	public:
 		FifoCache(std::size_t capacity);
+		~FifoCache();
 
 		std::size_t capacity() const;
 		std::size_t size() const;
@@ -30,6 +30,11 @@ namespace sc
 template <typename TKey, typename TValue> sc::FifoCache<TKey,TValue>::FifoCache(std::size_t capacity)
 {
 	m_queue = new CircularQueue<TKey>(capacity);
+}
+
+template <typename TKey, typename TValue> sc::FifoCache<TKey,TValue>::~FifoCache()
+{
+	delete m_queue;
 }
 
 template <typename TKey, typename TValue> std::size_t sc::FifoCache<TKey,TValue>::capacity() const
