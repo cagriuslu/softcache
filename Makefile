@@ -4,7 +4,7 @@ COMMON_COMPILER_FLAGS = -g -Wall -Wextra
 C_COMPILER_FLAGS      = -std=c11
 CPP_COMPILER_FLAGS    = -std=c++11
 INCLUDE_DIRECTORIES   =
-LINKER_FLAGS          = -pthread -lrt
+LINKER_FLAGS          =
 IS_HEADER_ONLY        = Y
 
 # executables
@@ -37,6 +37,7 @@ CPP_OBJFILES=$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%_cpp.o,$(CPP_SRCFILES))
 CPP_PICOBJFILES=$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%_cpp_pic.o,$(CPP_SRCFILES))
 
 # import binary source files
+ifneq ($(IS_HEADER_ONLY),Y)
 C_TESTSRCFILES=$(wildcard $(TESTDIR)/*.c)
 C_TESTSTATICBINFILES=$(patsubst $(TESTDIR)/%.c,$(BINDIR)/%_static,$(C_TESTSRCFILES))
 C_TESTSHAREDBINFILES=$(patsubst $(TESTDIR)/%.c,$(BINDIR)/%_shared,$(C_TESTSRCFILES))
@@ -48,6 +49,16 @@ CC_TESTSHAREDBINFILES=$(patsubst $(TESTDIR)/%.cc,$(BINDIR)/%_shared,$(CC_TESTSRC
 CPP_TESTSRCFILES=$(wildcard $(TESTDIR)/*.cpp)
 CPP_TESTSTATICBINFILES=$(patsubst $(TESTDIR)/%.cpp,$(BINDIR)/%_static,$(CPP_TESTSRCFILES))
 CPP_TESTSHAREDBINFILES=$(patsubst $(TESTDIR)/%.cpp,$(BINDIR)/%_shared,$(CPP_TESTSRCFILES))
+else
+C_TESTSRCFILES=$(wildcard $(TESTDIR)/*.c)
+C_TESTSTATICBINFILES=$(patsubst $(TESTDIR)/%.c,$(BINDIR)/%,$(C_TESTSRCFILES))
+
+CC_TESTSRCFILES=$(wildcard $(TESTDIR)/*.cc)
+CC_TESTSTATICBINFILES=$(patsubst $(TESTDIR)/%.cc,$(BINDIR)/%,$(CC_TESTSRCFILES))
+
+CPP_TESTSRCFILES=$(wildcard $(TESTDIR)/*.cpp)
+CPP_TESTSTATICBINFILES=$(patsubst $(TESTDIR)/%.cpp,$(BINDIR)/%,$(CPP_TESTSRCFILES))
+endif
 
 # configurations
 ifneq ($(IS_HEADER_ONLY),Y)
@@ -110,6 +121,15 @@ $(BINDIR)/%_static: $(TESTDIR)/%.cpp
 
 $(BINDIR)/%_shared: $(TESTDIR)/%.cpp
 	$(CP) $(COMMON_COMPILER_FLAGS) $(CPP_COMPILER_FLAGS) $(INCLUDE_DIRECTORIES) -I$(INCDIR) $< $(TESTSELFLINK_SHARED) $(LINKER_FLAGS) -o $@
+
+$(BINDIR)/%: $(TESTDIR)/%.c
+	$(CC) $(COMMON_COMPILER_FLAGS) $(C_COMPILER_FLAGS) $(INCLUDE_DIRECTORIES) -I$(INCDIR) $< $(LINKER_FLAGS) -o $@
+
+$(BINDIR)/%: $(TESTDIR)/%.cc
+	$(CP) $(COMMON_COMPILER_FLAGS) $(CPP_COMPILER_FLAGS) $(INCLUDE_DIRECTORIES) -I$(INCDIR) $< $(LINKER_FLAGS) -o $@
+
+$(BINDIR)/%: $(TESTDIR)/%.cpp
+	$(CP) $(COMMON_COMPILER_FLAGS) $(CPP_COMPILER_FLAGS) $(INCLUDE_DIRECTORIES) -I$(INCDIR) $< $(LINKER_FLAGS) -o $@
 
 # mkdir
 $(OBJDIR):
