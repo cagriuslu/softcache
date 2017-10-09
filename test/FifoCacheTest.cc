@@ -9,7 +9,7 @@ TEST_CASE("FifoCache", "[fifo] [cache] [container]")
 	sc::FifoCache<int,std::string> cache(2);
 	std::pair<int,std::string> pair;
 
-	SECTION("size = 0")
+	SECTION("Size = 0")
 	{
 		REQUIRE(cache.capacity() == 2);
 		REQUIRE(cache.size() == 0);
@@ -18,7 +18,7 @@ TEST_CASE("FifoCache", "[fifo] [cache] [container]")
 		REQUIRE(cache.pull(pair) == false);
 		REQUIRE(cache.peak(pair) == false);
 
-		SECTION("size = 1")
+		SECTION("Size = 1")
 		{
 			pair.first = 1;
 			pair.second = "first";
@@ -37,7 +37,7 @@ TEST_CASE("FifoCache", "[fifo] [cache] [container]")
 			pair.second = "";
 			REQUIRE(cache.peak(pair) == false);
 
-			SECTION("size = 0")
+			SECTION("Size = 0")
 			{
 				pair.first = 0;
 				pair.second = "";
@@ -53,7 +53,7 @@ TEST_CASE("FifoCache", "[fifo] [cache] [container]")
 				REQUIRE(cache.peak(pair) == false);
 			}
 
-			SECTION("size = 2")
+			SECTION("Size = 2")
 			{
 				pair.first = 2;
 				pair.second = "second";
@@ -72,7 +72,7 @@ TEST_CASE("FifoCache", "[fifo] [cache] [container]")
 				pair.second = "third";
 				REQUIRE(cache.push(pair) == false);
 
-				SECTION("size = 1")
+				SECTION("Size = 1")
 				{
 					pair.first = 0;
 					pair.second = "";
