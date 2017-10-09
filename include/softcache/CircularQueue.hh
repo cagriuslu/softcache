@@ -2,12 +2,12 @@
 
 #include "Container.hh"
 #include <vector>
+#include <stdexcept>
 
 namespace sc
 {
 	template <typename T> class CircularQueue : public Container<T>
 	{
-	private:
 		std::vector<T> m_buffer;
 		std::size_t m_size;
 		std::size_t m_begin;
@@ -31,6 +31,9 @@ namespace sc
 // implementations
 template <typename T> sc::CircularQueue<T>::CircularQueue(std::size_t capacity)
 {
+	if (capacity < 1)
+		throw std::invalid_argument("Capacity is given as 0 (zero)");
+
 	m_buffer.resize(capacity);
 	m_size = capacity;
 	m_begin = 0;
