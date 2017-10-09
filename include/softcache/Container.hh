@@ -7,6 +7,8 @@ namespace sc
 	template <typename T> class Container
 	{
 	public:
+		virtual ~Container() { }
+
 		virtual std::size_t capacity() const = 0;
 		virtual std::size_t size() const = 0;
 		virtual bool empty() const = 0;
