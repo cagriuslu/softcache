@@ -31,6 +31,7 @@ namespace sc
 template <typename TContainer, typename TKey, typename TValue> sc::ContainerCache<TContainer,TKey,TValue>::ContainerCache(std::size_t capacity)
 {
 	m_cont = new TContainer(capacity);
+	m_map.reserve(capacity);
 }
 
 template <typename TContainer, typename TKey, typename TValue> sc::ContainerCache<TContainer,TKey,TValue>::~ContainerCache()
